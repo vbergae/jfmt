@@ -1,0 +1,31 @@
+WHITESPACE = _{ " " | "\t" | "\r" | "\n" }
+
+object = {
+    "{" ~ "}" // | "{" ~ pair ~ ("," ~ pair)* ~ "}"
+}
+// array  = {
+// "[" ~ "]"
+// | "[" ~ value ~ ("," ~ value)* ~ "]"
+// }
+
+// pair = { string ~ ":" ~ value }
+
+// value = _{ object | array | string | number | boolean | null }
+
+// boolean = { "true" | "false" }
+
+// null = { "null" }
+
+// string = ${ "\"" ~ inner ~ "\"" }
+// inner  = @{ char* }
+// char   =  {
+// !("\"" | "\\") ~ ANY
+// | "\\" ~ ("\"" | "\\" | "/" | "b" | "f" | "n" | "r" | "t")
+// | "\\" ~ ("u" ~ ASCII_HEX_DIGIT{4})
+// }
+
+// number = @{
+// "-"? ~ ("0" | ASCII_NONZERO_DIGIT ~ ASCII_DIGIT*) ~ ("." ~ ASCII_DIGIT*)? ~ (^"e" ~ ("+" | "-")? ~ ASCII_DIGIT+)?
+// }
+
+json = _{ SOI ~ (object) ~ EOI }
