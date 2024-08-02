@@ -4,10 +4,11 @@ fn main() {
 }
 
 fn format_json(json: &str) -> String {
-    let ast = parse_json_file(json).unwrap();
+    let ast = parse_json_file(json).expect("Invalid json");
 
     match ast {
         JSONValue::Object => "{\n}".to_string(),
+        JSONValue::Array => "[\n]".to_string(),
     }
 }
 
@@ -21,6 +22,7 @@ struct JSONParser;
 
 enum JSONValue {
     Object,
+    Array,
 }
 
 fn parse_json_file(file: &str) -> Result<JSONValue, Error<Rule>> {
@@ -28,6 +30,7 @@ fn parse_json_file(file: &str) -> Result<JSONValue, Error<Rule>> {
 
     match json.as_rule() {
         Rule::object => Ok(JSONValue::Object),
+        Rule::array => Ok(JSONValue::Array),
         _ => unreachable!(),
     }
 }
@@ -37,9 +40,18 @@ mod tests {
     use super::*;
 
     #[test]
-    fn it_formats_empty_json() {
+    fn it_formats_empty_object() {
         let input = "{}";
         let expected = "{\n}";
+        let result = format_json(input);
+
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn it_formats_empty_array() {
+        let input = "[]";
+        let expected = "[\n]";
         let result = format_json(input);
 
         assert_eq!(result, expected);

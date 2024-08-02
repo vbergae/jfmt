@@ -3,10 +3,9 @@ WHITESPACE = _{ " " | "\t" | "\r" | "\n" }
 object = {
     "{" ~ "}" // | "{" ~ pair ~ ("," ~ pair)* ~ "}"
 }
-// array  = {
-// "[" ~ "]"
-// | "[" ~ value ~ ("," ~ value)* ~ "]"
-// }
+array  = {
+    "[" ~ "]" // | "[" ~ value ~ ("," ~ value)* ~ "]"
+}
 
 // pair = { string ~ ":" ~ value }
 
@@ -28,4 +27,4 @@ object = {
 // "-"? ~ ("0" | ASCII_NONZERO_DIGIT ~ ASCII_DIGIT*) ~ ("." ~ ASCII_DIGIT*)? ~ (^"e" ~ ("+" | "-")? ~ ASCII_DIGIT+)?
 // }
 
-json = _{ SOI ~ (object) ~ EOI }
+json = _{ SOI ~ (object | array) ~ EOI }
