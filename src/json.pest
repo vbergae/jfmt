@@ -4,14 +4,15 @@ object = {
     "{" ~ "}" // | "{" ~ pair ~ ("," ~ pair)* ~ "}"
 }
 array  = {
-    "[" ~ "]" // | "[" ~ value ~ ("," ~ value)* ~ "]"
+    "[" ~ "]"
+  | "[" ~ value ~ ("," ~ value)* ~ "]"
 }
 
 // pair = { string ~ ":" ~ value }
 
-// value = _{ object | array | string | number | boolean | null }
+value = _{ object | array | boolean }
 
-// boolean = { "true" | "false" }
+boolean = { "true" | "false" }
 
 // null = { "null" }
 
@@ -27,4 +28,4 @@ array  = {
 // "-"? ~ ("0" | ASCII_NONZERO_DIGIT ~ ASCII_DIGIT*) ~ ("." ~ ASCII_DIGIT*)? ~ (^"e" ~ ("+" | "-")? ~ ASCII_DIGIT+)?
 // }
 
-json = _{ SOI ~ (object | array) ~ EOI }
+json = _{ SOI ~ (object | array | boolean) ~ EOI }
