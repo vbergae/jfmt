@@ -16,6 +16,7 @@ pub fn format(json: &str) -> String {
                     _ => format!("[\n{}\n]", contents.join(",\n")),
                 }
             }
+            JSONValue::Number(number) => format!("{}", number),
             JSONValue::Boolean(value) => format!("{}", value),
             JSONValue::Null => "null".to_string(),
         }
@@ -35,6 +36,7 @@ struct JSONParser;
 enum JSONValue {
     Object,
     Array(Vec<JSONValue>),
+    Number(f64),
     Boolean(bool),
     Null,
 }
@@ -48,6 +50,7 @@ fn parse_json_file(file: &str) -> Result<JSONValue, Error<Rule>> {
         match pair.as_rule() {
             Rule::object => JSONValue::Object,
             Rule::array => JSONValue::Array(pair.into_inner().map(parse_value).collect()),
+            Rule::number => JSONValue::Number(pair.as_str().parse().unwrap()),
             Rule::boolean => JSONValue::Boolean(pair.as_str().parse().unwrap()),
             Rule::null => JSONValue::Null,
             _ => unreachable!(),
@@ -101,6 +104,15 @@ mod json_formatter_tests {
     fn it_formats_an_array_of_null_values() {
         let input = "[false, null, null]";
         let expected = "[\n\tfalse,\n\tnull,\n\tnull\n]";
+        let result = format(input);
+
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn it_formats_an_array_of_numbers() {
+        let input = "[1, 2, -1, 5e3]";
+        let expected = "[\n\t1,\n\t2,\n\t-1,\n\t5000\n]";
         let result = format(input);
 
         assert_eq!(result, expected);

@@ -10,7 +10,7 @@ array  = {
 
 // pair = { string ~ ":" ~ value }
 
-value = _{ object | array | boolean | null }
+value = _{ object | array | number | boolean | null }
 
 boolean = { "true" | "false" }
 
@@ -24,8 +24,8 @@ null = { "null" }
 // | "\\" ~ ("u" ~ ASCII_HEX_DIGIT{4})
 // }
 
-// number = @{
-// "-"? ~ ("0" | ASCII_NONZERO_DIGIT ~ ASCII_DIGIT*) ~ ("." ~ ASCII_DIGIT*)? ~ (^"e" ~ ("+" | "-")? ~ ASCII_DIGIT+)?
-// }
+number = @{
+    "-"? ~ ("0" | ASCII_NONZERO_DIGIT ~ ASCII_DIGIT*) ~ ("." ~ ASCII_DIGIT*)? ~ (^"e" ~ ("+" | "-")? ~ ASCII_DIGIT+)?
+}
 
-json = _{ SOI ~ (object | array | boolean | null) ~ EOI }
+json = _{ SOI ~ (object | array | boolean | null | number) ~ EOI }
