@@ -3,7 +3,17 @@ pub fn format(json: &str) -> String {
 
     fn serialize(value: &JSONValue) -> String {
         match value {
-            JSONValue::Object => "{\n}".to_string(),
+            JSONValue::Object(values) => {
+                let contents: Vec<_> = values
+                    .iter()
+                    .map(|(name, value)| format!("\t\"{}\": {}", name, serialize(value)))
+                    .collect();
+
+                match contents.len() {
+                    0 => "{\n}".to_string(),
+                    _ => format!("{{\n{}\n}}", contents.join(",\n")),
+                }
+            }
             JSONValue::Array(values) => {
                 let contents: Vec<String> = values
                     .iter()
@@ -35,7 +45,7 @@ use pest_derive::Parser;
 struct JSONParser;
 
 enum JSONValue<'a> {
-    Object,
+    Object(Vec<(&'a str, JSONValue<'a>)>),
     Array(Vec<JSONValue<'a>>),
     String(&'a str),
     Number(f64),
@@ -50,7 +60,22 @@ fn parse_json_file(file: &str) -> Result<JSONValue, Error<Rule>> {
 
     fn parse_value(pair: Pair<Rule>) -> JSONValue {
         match pair.as_rule() {
-            Rule::object => JSONValue::Object,
+            Rule::object => JSONValue::Object(
+                pair.into_inner()
+                    .map(|pair| {
+                        let mut inner_rules = pair.into_inner();
+                        let name = inner_rules
+                            .next()
+                            .unwrap()
+                            .into_inner()
+                            .next()
+                            .unwrap()
+                            .as_str();
+                        let value = parse_value(inner_rules.next().unwrap());
+                        (name, value)
+                    })
+                    .collect(),
+            ),
             Rule::array => JSONValue::Array(pair.into_inner().map(parse_value).collect()),
             Rule::string => JSONValue::String(pair.into_inner().next().unwrap().as_str()),
             Rule::number => JSONValue::Number(pair.as_str().parse().unwrap()),
@@ -125,6 +150,15 @@ mod json_formatter_tests {
     fn it_formats_an_array_of_strings() {
         let input = "[\"hello\",\"world\"]";
         let expected = "[\n\t\"hello\",\n\t\"world\"\n]";
+        let result = format(input);
+
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn it_formats_an_object() {
+        let input = "{\"name\": \"Nico\",\"foo\": \"bar\"}";
+        let expected = "{\n\t\"name\": \"Nico\",\n\t\"foo\": \"bar\"\n}";
         let result = format(input);
 
         assert_eq!(result, expected);

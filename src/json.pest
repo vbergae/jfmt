@@ -1,14 +1,15 @@
 WHITESPACE = _{ " " | "\t" | "\r" | "\n" }
 
 object = {
-    "{" ~ "}" // | "{" ~ pair ~ ("," ~ pair)* ~ "}"
+    "{" ~ "}"
+  | "{" ~ pair ~ ("," ~ pair)* ~ "}"
 }
 array  = {
     "[" ~ "]"
   | "[" ~ value ~ ("," ~ value)* ~ "]"
 }
 
-// pair = { string ~ ":" ~ value }
+pair = { string ~ ":" ~ value }
 
 value = _{ object | array | number | string | boolean | null }
 
