@@ -17,6 +17,7 @@ pub fn format(json: &str) -> String {
                 }
             }
             JSONValue::Boolean(value) => format!("{}", value),
+            JSONValue::Null => "null".to_string(),
         }
     }
 
@@ -35,6 +36,7 @@ enum JSONValue {
     Object,
     Array(Vec<JSONValue>),
     Boolean(bool),
+    Null,
 }
 
 fn parse_json_file(file: &str) -> Result<JSONValue, Error<Rule>> {
@@ -47,6 +49,7 @@ fn parse_json_file(file: &str) -> Result<JSONValue, Error<Rule>> {
             Rule::object => JSONValue::Object,
             Rule::array => JSONValue::Array(pair.into_inner().map(parse_value).collect()),
             Rule::boolean => JSONValue::Boolean(pair.as_str().parse().unwrap()),
+            Rule::null => JSONValue::Null,
             _ => unreachable!(),
         }
     }
@@ -89,6 +92,15 @@ mod json_formatter_tests {
     fn it_formats_an_array_with_many_boolean_element() {
         let input = "[true,false]";
         let expected = "[\n\ttrue,\n\tfalse\n]";
+        let result = format(input);
+
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn it_formats_an_array_of_null_values() {
+        let input = "[false, null, null]";
+        let expected = "[\n\tfalse,\n\tnull,\n\tnull\n]";
         let result = format(input);
 
         assert_eq!(result, expected);

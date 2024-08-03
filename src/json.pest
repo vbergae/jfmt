@@ -10,11 +10,11 @@ array  = {
 
 // pair = { string ~ ":" ~ value }
 
-value = _{ object | array | boolean }
+value = _{ object | array | boolean | null }
 
 boolean = { "true" | "false" }
 
-// null = { "null" }
+null = { "null" }
 
 // string = ${ "\"" ~ inner ~ "\"" }
 // inner  = @{ char* }
@@ -28,4 +28,4 @@ boolean = { "true" | "false" }
 // "-"? ~ ("0" | ASCII_NONZERO_DIGIT ~ ASCII_DIGIT*) ~ ("." ~ ASCII_DIGIT*)? ~ (^"e" ~ ("+" | "-")? ~ ASCII_DIGIT+)?
 // }
 
-json = _{ SOI ~ (object | array | boolean) ~ EOI }
+json = _{ SOI ~ (object | array | boolean | null) ~ EOI }
