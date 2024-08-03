@@ -1,6 +1,14 @@
 mod json_formatter;
 
 fn main() {
-    let input = std::env::args().nth(1).expect("no json given");
-    println!("{}", json_formatter::format(&input));
+    let args = Cli::parse();
+
+    println!("{}", json_formatter::format(&args.json));
+}
+
+use clap::Parser;
+
+#[derive(Parser)]
+struct Cli {
+    json: String,
 }

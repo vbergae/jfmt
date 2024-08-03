@@ -4,8 +4,8 @@ pub fn format(json: &str) -> String {
     fn serialize(value: &JSONValue) -> String {
         match value {
             JSONValue::Object => "{\n}".to_string(),
-            JSONValue::Array(a) => {
-                let contents: Vec<String> = a
+            JSONValue::Array(values) => {
+                let contents: Vec<String> = values
                     .iter()
                     .map(serialize)
                     .map(|value| format!("\t{}", value))
@@ -16,7 +16,7 @@ pub fn format(json: &str) -> String {
                     _ => format!("[\n{}\n]", contents.join(",\n")),
                 }
             }
-            JSONValue::Boolean(b) => format!("{}", b),
+            JSONValue::Boolean(value) => format!("{}", value),
         }
     }
 
