@@ -10,22 +10,22 @@ array  = {
 
 // pair = { string ~ ":" ~ value }
 
-value = _{ object | array | number | boolean | null }
+value = _{ object | array | number | string | boolean | null }
 
 boolean = { "true" | "false" }
 
 null = { "null" }
 
-// string = ${ "\"" ~ inner ~ "\"" }
-// inner  = @{ char* }
-// char   =  {
-// !("\"" | "\\") ~ ANY
-// | "\\" ~ ("\"" | "\\" | "/" | "b" | "f" | "n" | "r" | "t")
-// | "\\" ~ ("u" ~ ASCII_HEX_DIGIT{4})
-// }
+string = ${ "\"" ~ inner ~ "\"" }
+inner  = @{ char* }
+char   =  {
+    !("\"" | "\\") ~ ANY
+  | "\\" ~ ("\"" | "\\" | "/" | "b" | "f" | "n" | "r" | "t")
+  | "\\" ~ ("u" ~ ASCII_HEX_DIGIT{4})
+}
 
 number = @{
     "-"? ~ ("0" | ASCII_NONZERO_DIGIT ~ ASCII_DIGIT*) ~ ("." ~ ASCII_DIGIT*)? ~ (^"e" ~ ("+" | "-")? ~ ASCII_DIGIT+)?
 }
 
-json = _{ SOI ~ (object | array | boolean | null | number) ~ EOI }
+json = _{ SOI ~ (object | array | boolean | null | number | string) ~ EOI }
