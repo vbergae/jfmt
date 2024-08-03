@@ -1,4 +1,4 @@
-/**
+/*
 jfmt
 Copyright (C) 2024 - Víctor Berga
 
@@ -15,12 +15,14 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-mod json_formatter;
+
+mod formatter;
+mod parser;
 
 fn main() {
     let args = Cli::parse();
 
-    println!("{}", json_formatter::format(&args.json));
+    println!("{}", formatter::format(&args.json));
 }
 
 use clap::Parser;

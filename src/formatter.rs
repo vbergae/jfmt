@@ -1,4 +1,4 @@
-/**
+/*
 jfmt
 Copyright (C) 2024 - Víctor Berga
 
@@ -15,6 +15,9 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+use crate::parser::parse_json_file;
+use crate::parser::JSONValue;
 
 pub fn format(json: &str) -> String {
     let value = parse_json_file(json).expect("Invalid json");
@@ -52,58 +55,6 @@ pub fn format(json: &str) -> String {
     }
 
     serialize(&value)
-}
-
-use pest::error::Error;
-use pest::Parser;
-use pest_derive::Parser;
-
-#[derive(Parser)]
-#[grammar = "json.pest"]
-struct JSONParser;
-
-enum JSONValue<'a> {
-    Object(Vec<(&'a str, JSONValue<'a>)>),
-    Array(Vec<JSONValue<'a>>),
-    String(&'a str),
-    Number(f64),
-    Boolean(bool),
-    Null,
-}
-
-fn parse_json_file(file: &str) -> Result<JSONValue, Error<Rule>> {
-    let json = JSONParser::parse(Rule::json, file)?.next().unwrap();
-
-    use pest::iterators::Pair;
-
-    fn parse_value(pair: Pair<Rule>) -> JSONValue {
-        match pair.as_rule() {
-            Rule::object => JSONValue::Object(
-                pair.into_inner()
-                    .map(|pair| {
-                        let mut inner_rules = pair.into_inner();
-                        let name = inner_rules
-                            .next()
-                            .unwrap()
-                            .into_inner()
-                            .next()
-                            .unwrap()
-                            .as_str();
-                        let value = parse_value(inner_rules.next().unwrap());
-                        (name, value)
-                    })
-                    .collect(),
-            ),
-            Rule::array => JSONValue::Array(pair.into_inner().map(parse_value).collect()),
-            Rule::string => JSONValue::String(pair.into_inner().next().unwrap().as_str()),
-            Rule::number => JSONValue::Number(pair.as_str().parse().unwrap()),
-            Rule::boolean => JSONValue::Boolean(pair.as_str().parse().unwrap()),
-            Rule::null => JSONValue::Null,
-            _ => unreachable!(),
-        }
-    }
-
-    Ok(parse_value(json))
 }
 
 #[cfg(test)]
