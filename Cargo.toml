@@ -1,7 +1,15 @@
 [package]
 name = "jfmt"
 version = "0.1.0"
+authors = ["Víctor Berga <vbergae@users.noreply.github.com>"]
 edition = "2021"
+license = "GPL v3"
+description = "JSON formatter written in Rust using Pest for the grammar"
+readme = "README.md"
+homepage = "https://github.com/vbergae/jfmt"
+repository = "https://github.com/vbergae/jfmt"
+keywords = ["cli", "json", "formatter"]
+categories = ["command-line-utilities"]
 
 [dependencies]
 clap = { version = "4.5.13", features = ["derive"] }
