@@ -78,6 +78,14 @@ cargo test
 
 This project is licensed under the GPL v3 License. See the [LICENSE](LICENSE) file for details.
 
+### Included Software
+
+This project includes files that are licensed under the Apache License, Version 2.0. Specifically, the following file(s):
+
+- `src/json.pest`
+
+These files retain their original license. You may not use these files except in compliance with the Apache License, Version 2.0. You may obtain a copy of the license at http://www.apache.org/licenses/LICENSE-2.0.
+
 ## Contact
 
 For any questions or feedback, please open an issue on the [GitHub repository](https://github.com/yourusername/jfmt) or contact the project maintainer.
