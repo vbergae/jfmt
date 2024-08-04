@@ -17,44 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 use crate::parser::parse_json_file;
-use crate::parser::JSONValue;
 
 pub fn format(json: &str) -> String {
     let value = parse_json_file(json).expect("Invalid json");
-
-    fn serialize(value: &JSONValue) -> String {
-        match value {
-            JSONValue::Object(values) => {
-                let contents: Vec<_> = values
-                    .iter()
-                    .map(|(name, value)| format!("\t\"{}\": {}", name, serialize(value)))
-                    .collect();
-
-                match contents.len() {
-                    0 => "{\n}".to_string(),
-                    _ => format!("{{\n{}\n}}", contents.join(",\n")),
-                }
-            }
-            JSONValue::Array(values) => {
-                let contents: Vec<String> = values
-                    .iter()
-                    .map(serialize)
-                    .map(|value| format!("\t{}", value))
-                    .collect();
-
-                match contents.len() {
-                    0 => format!("{}", "[\n]"),
-                    _ => format!("[\n{}\n]", contents.join(",\n")),
-                }
-            }
-            JSONValue::String(string) => format!("\"{}\"", string),
-            JSONValue::Number(number) => format!("{}", number),
-            JSONValue::Boolean(value) => format!("{}", value),
-            JSONValue::Null => "null".to_string(),
-        }
-    }
-
-    serialize(&value)
+    format!("{}", value)
 }
 
 #[cfg(test)]

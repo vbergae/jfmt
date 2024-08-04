@@ -33,6 +33,43 @@ pub enum JSONValue<'a> {
     Null,
 }
 
+use std::fmt;
+
+impl fmt::Display for JSONValue<'_> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        fn serialize(value: &JSONValue, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+            match value {
+                JSONValue::Object(values) => {
+                    let contents: Vec<String> = values
+                        .iter()
+                        .map(|(name, value)| format!("\t\"{}\": {}", name, value))
+                        .collect();
+
+                    match contents.len() {
+                        0 => write!(f, "{}", "{\n}"),
+                        _ => write!(f, "{{\n{}\n}}", contents.join(",\n")),
+                    }
+                }
+                JSONValue::Array(values) => {
+                    let contents: Vec<String> =
+                        values.iter().map(|value| format!("\t{}", value)).collect();
+
+                    match contents.len() {
+                        0 => write!(f, "{}", "[\n]"),
+                        _ => write!(f, "[\n{}\n]", contents.join(",\n")),
+                    }
+                }
+                JSONValue::String(string) => write!(f, "\"{}\"", string),
+                JSONValue::Number(number) => write!(f, "{}", number),
+                JSONValue::Boolean(value) => write!(f, "{}", value),
+                JSONValue::Null => write!(f, "{}", "null"),
+            }
+        }
+
+        serialize(self, f)
+    }
+}
+
 pub fn parse_json_file(file: &str) -> Result<JSONValue, Error<Rule>> {
     let json = JSONParser::parse(Rule::json, file)?.next().unwrap();
 
