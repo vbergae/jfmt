@@ -104,14 +104,30 @@ impl fmt::Display for Array<'_> {
     }
 }
 
-pub enum JSONValue<'a> {
-    String(&'a str),
+pub struct StringNode<'a> {
+    value: &'a str,
+}
+impl<'a> StringNode<'a> {
+    fn new(pair: Pair<'a, Rule>) -> Self {
+        let value = pair.into_inner().next().unwrap().as_str();
+
+        StringNode { value }
+    }
+}
+impl<'a> Node<'a> for StringNode<'a> {}
+impl fmt::Display for StringNode<'_> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "\"{}\"", self.value)
+    }
+}
+
+pub enum JSONValue {
     Number(f64),
     Boolean(bool),
     Null,
 }
 
-impl<'a> Node<'a> for JSONValue<'a> {}
+impl<'a> Node<'a> for JSONValue {}
 
 #[derive(Parser)]
 #[grammar = "json.pest"]
@@ -121,9 +137,7 @@ fn parse_value<'a>(pair: Pair<'a, Rule>) -> Box<dyn Node<'a> + 'a> {
     match pair.as_rule() {
         Rule::object => Box::new(Object::new(pair)),
         Rule::array => Box::new(Array::new(pair)),
-        Rule::string => Box::new(JSONValue::String(
-            pair.into_inner().next().unwrap().as_str(),
-        )),
+        Rule::string => Box::new(StringNode::new(pair)),
         Rule::number => Box::new(JSONValue::Number(pair.as_str().parse().unwrap())),
         Rule::boolean => Box::new(JSONValue::Boolean(pair.as_str().parse().unwrap())),
         Rule::null => Box::new(JSONValue::Null),

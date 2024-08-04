@@ -26,11 +26,10 @@ pub fn format(json: &str) -> String {
 
 use std::fmt;
 
-impl fmt::Display for JSONValue<'_> {
+impl fmt::Display for JSONValue {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         fn serialize(value: &JSONValue, f: &mut fmt::Formatter<'_>) -> fmt::Result {
             match value {
-                JSONValue::String(string) => write!(f, "\"{}\"", string),
                 JSONValue::Number(number) => write!(f, "{}", number),
                 JSONValue::Boolean(value) => write!(f, "{}", value),
                 JSONValue::Null => write!(f, "{}", "null"),
