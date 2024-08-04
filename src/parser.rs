@@ -121,8 +121,24 @@ impl fmt::Display for StringNode<'_> {
     }
 }
 
+pub struct Number {
+    value: f64,
+}
+impl<'a> Number {
+    fn new(pair: Pair<'a, Rule>) -> Self {
+        let value = pair.as_str().parse().unwrap();
+
+        Number { value }
+    }
+}
+impl<'a> Node<'a> for Number {}
+impl fmt::Display for Number {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.value)
+    }
+}
+
 pub enum JSONValue {
-    Number(f64),
     Boolean(bool),
     Null,
 }
@@ -138,7 +154,7 @@ fn parse_value<'a>(pair: Pair<'a, Rule>) -> Box<dyn Node<'a> + 'a> {
         Rule::object => Box::new(Object::new(pair)),
         Rule::array => Box::new(Array::new(pair)),
         Rule::string => Box::new(StringNode::new(pair)),
-        Rule::number => Box::new(JSONValue::Number(pair.as_str().parse().unwrap())),
+        Rule::number => Box::new(Number::new(pair)),
         Rule::boolean => Box::new(JSONValue::Boolean(pair.as_str().parse().unwrap())),
         Rule::null => Box::new(JSONValue::Null),
         _ => unreachable!(),
