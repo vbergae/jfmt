@@ -17,26 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 use crate::parser::parse_json_file;
-use crate::parser::JSONValue;
 
 pub fn format(json: &str) -> String {
     let value = parse_json_file(json).expect("Invalid json");
     format!("{}", value)
-}
-
-use std::fmt;
-
-impl fmt::Display for JSONValue {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        fn serialize(value: &JSONValue, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-            match value {
-                JSONValue::Boolean(value) => write!(f, "{}", value),
-                JSONValue::Null => write!(f, "{}", "null"),
-            }
-        }
-
-        serialize(self, f)
-    }
 }
 
 #[cfg(test)]
