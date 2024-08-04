@@ -16,10 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-use crate::parser::parse_json_file;
+use crate::parser::parse;
 
 pub fn format(json: &str) -> String {
-    let value = parse_json_file(json).expect("Invalid json");
+    let value = parse(json).expect("Invalid json");
     format!("{}", value)
 }
 

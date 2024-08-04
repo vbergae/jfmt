@@ -16,19 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod formatter;
-mod nodes;
-mod parser;
+use std::fmt;
 
-fn main() {
-    let args = Cli::parse();
-
-    println!("{}", formatter::format(&args.json));
+pub struct Boolean {
+    pub value: bool,
 }
 
-use clap::Parser;
-
-#[derive(Parser)]
-struct Cli {
-    json: String,
+impl fmt::Display for Boolean {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.value)
+    }
 }

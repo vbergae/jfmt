@@ -16,19 +16,24 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod formatter;
-mod nodes;
-mod parser;
+use crate::parser::Node;
+use std::fmt;
 
-fn main() {
-    let args = Cli::parse();
-
-    println!("{}", formatter::format(&args.json));
+pub struct Array<'a> {
+    pub values: Vec<Box<dyn Node<'a> + 'a>>,
 }
 
-use clap::Parser;
+impl fmt::Display for Array<'_> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let contents: Vec<String> = self
+            .values
+            .iter()
+            .map(|value| format!("\t{}", value))
+            .collect();
 
-#[derive(Parser)]
-struct Cli {
-    json: String,
+        match contents.len() {
+            0 => write!(f, "{}", "[\n]"),
+            _ => write!(f, "[\n{}\n]", contents.join(",\n")),
+        }
+    }
 }

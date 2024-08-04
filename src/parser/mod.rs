@@ -16,19 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-mod formatter;
-mod nodes;
-mod parser;
+mod parse;
 
-fn main() {
-    let args = Cli::parse();
-
-    println!("{}", formatter::format(&args.json));
-}
-
-use clap::Parser;
-
-#[derive(Parser)]
-struct Cli {
-    json: String,
-}
+pub use parse::parse;
+pub use parse::Node;
