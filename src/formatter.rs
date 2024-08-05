@@ -98,4 +98,13 @@ mod json_formatter_tests {
 
         assert_eq!(result, expected);
     }
+
+    #[test]
+    fn it_formats_multidensional_arrays() {
+        let input = "[1, [3]]";
+        let expected = "[\n\t1,\n\t[\n\t\t3\n\t]\n]";
+        let result = format(input);
+
+        assert_eq!(result, expected);
+    }
 }

@@ -25,17 +25,17 @@ use pest_derive::Parser;
 pub fn parse(json: &str) -> Result<Box<dyn Node + '_>, Error<Rule>> {
     let json = JSONParser::parse(Rule::json, json)?.next().unwrap();
 
-    Ok(parse_value(json))
+    Ok(parse_value(json, 1))
 }
 
 #[derive(Parser)]
 #[grammar = "json.pest"]
 struct JSONParser;
 
-pub fn parse_value<'a>(pair: Pair<'a, Rule>) -> Box<dyn Node<'a> + 'a> {
+pub fn parse_value<'a>(pair: Pair<'a, Rule>, indendation: usize) -> Box<dyn Node<'a> + 'a> {
     match pair.as_rule() {
         Rule::object => Box::new(Object::new(pair)),
-        Rule::array => Box::new(Array::new(pair)),
+        Rule::array => Box::new(Array::new(pair, indendation)),
         Rule::string => Box::new(String::new(pair)),
         Rule::number => Box::new(Number::new(pair)),
         Rule::boolean => Box::new(Boolean::new(pair)),
@@ -58,7 +58,7 @@ impl<'a> Object<'a> {
                     .next()
                     .unwrap()
                     .as_str();
-                let value = parse_value(inner_rules.next().unwrap());
+                let value = parse_value(inner_rules.next().unwrap(), 1);
                 (name, value)
             })
             .collect();
@@ -71,10 +71,16 @@ impl<'a> Object<'a> {
 
 impl<'a> Node<'a> for Array<'a> {}
 impl<'a> Array<'a> {
-    fn new(pair: Pair<'a, Rule>) -> Self {
-        let values = pair.into_inner().map(parse_value).collect();
+    fn new(pair: Pair<'a, Rule>, indendation: usize) -> Self {
+        let values = pair
+            .into_inner()
+            .map(|pair| parse_value(pair, indendation + 1))
+            .collect();
 
-        Array { values }
+        Array {
+            values,
+            indendation,
+        }
     }
 }
 

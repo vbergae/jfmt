@@ -21,6 +21,7 @@ use std::fmt;
 
 pub struct Array<'a> {
     pub values: Vec<Box<dyn Node<'a> + 'a>>,
+    pub indendation: usize,
 }
 
 impl fmt::Display for Array<'_> {
@@ -28,12 +29,17 @@ impl fmt::Display for Array<'_> {
         let contents: Vec<String> = self
             .values
             .iter()
-            .map(|value| format!("\t{}", value))
+            .map(|value| format!("{}{}", "\t".repeat(self.indendation), value))
             .collect();
 
         match contents.len() {
             0 => write!(f, "{}", "[\n]"),
-            _ => write!(f, "[\n{}\n]", contents.join(",\n")),
+            _ => write!(
+                f,
+                "[\n{}\n{}]",
+                contents.join(",\n"),
+                "\t".repeat(self.indendation - 1)
+            ),
         }
     }
 }
