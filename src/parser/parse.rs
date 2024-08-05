@@ -16,15 +16,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-use core::fmt;
-
-use crate::nodes::{Array, Boolean, Null, Number, Object, String};
+use crate::nodes::{Array, Boolean, Node, Null, Number, Object, String};
 use pest::error::Error;
 use pest::iterators::Pair;
 use pest::Parser;
 use pest_derive::Parser;
-
-pub trait Node<'a>: fmt::Display {}
 
 pub fn parse(json: &str) -> Result<Box<dyn Node + '_>, Error<Rule>> {
     let json = JSONParser::parse(Rule::json, json)?.next().unwrap();

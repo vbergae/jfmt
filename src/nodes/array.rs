@@ -16,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-use crate::parser::Node;
+use crate::nodes::Node;
 use std::fmt;
 
 pub struct Array<'a> {

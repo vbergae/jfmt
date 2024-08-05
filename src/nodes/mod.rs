@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 mod array;
 mod boolean;
+mod node;
 mod null;
 mod number;
 mod object;
@@ -25,6 +26,7 @@ mod string;
 
 pub use array::Array;
 pub use boolean::Boolean;
+pub use node::Node;
 pub use null::Null;
 pub use number::Number;
 pub use object::Object;

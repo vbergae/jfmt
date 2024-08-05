@@ -16,24 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-use crate::nodes::Node;
-use std::fmt;
+use core::fmt;
 
-pub struct Object<'a> {
-    pub members: Vec<(&'a str, Box<dyn Node<'a> + 'a>)>,
-}
-
-impl fmt::Display for Object<'_> {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let contents: Vec<String> = self
-            .members
-            .iter()
-            .map(|(name, value)| format!("\t\"{}\": {}", name, value))
-            .collect();
-
-        match contents.len() {
-            0 => write!(f, "{}", "{\n}"),
-            _ => write!(f, "{{\n{}\n}}", contents.join(",\n")),
-        }
-    }
-}
+pub trait Node<'a>: fmt::Display {}

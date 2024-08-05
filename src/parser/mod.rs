@@ -19,4 +19,3 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 mod parse;
 
 pub use parse::parse;
-pub use parse::Node;
