@@ -16,10 +16,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use super::Node;
 use std::fmt;
 
 pub struct Boolean {
     pub value: bool,
+}
+
+impl<'a> Node<'a> for Boolean {
+    fn format(&self, indendation: usize) -> String {
+        "".to_string()
+    }
 }
 
 impl fmt::Display for Boolean {

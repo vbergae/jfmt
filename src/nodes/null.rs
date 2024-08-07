@@ -16,12 +16,34 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-use std::fmt;
+use crate::nodes::node::TAB_SPACES;
+use crate::nodes::Node;
 
 pub struct Null {}
 
-impl fmt::Display for Null {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", "null")
+impl<'a> Node<'a> for Null {
+    fn format(&self, indendation: usize) -> String {
+        format!("{}\"{}\"", " ".repeat(indendation * TAB_SPACES), "null")
+    }
+}
+
+#[cfg(test)]
+mod null_tests {
+    use super::*;
+
+    #[test]
+    fn test_formats_null_without_indendation() {
+        let null = Null {};
+        let result = null.format(0);
+
+        assert_eq!("\"null\"", result);
+    }
+
+    #[test]
+    fn test_formats_null_with_indendation() {
+        let null = Null {};
+        let result = null.format(1);
+
+        assert_eq!("  \"null\"", result);
     }
 }

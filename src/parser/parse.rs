@@ -44,7 +44,6 @@ pub fn parse_value<'a>(pair: Pair<'a, Rule>, indendation: usize) -> Box<dyn Node
     }
 }
 
-impl<'a> Node<'a> for Object<'a> {}
 impl<'a> Object<'a> {
     fn new(pair: Pair<'a, Rule>) -> Self {
         let attributes = pair
@@ -69,7 +68,6 @@ impl<'a> Object<'a> {
     }
 }
 
-impl<'a> Node<'a> for Array<'a> {}
 impl<'a> Array<'a> {
     fn new(pair: Pair<'a, Rule>, indendation: usize) -> Self {
         let values = pair
@@ -84,7 +82,6 @@ impl<'a> Array<'a> {
     }
 }
 
-impl<'a> Node<'a> for String<'a> {}
 impl<'a> String<'a> {
     fn new(pair: Pair<'a, Rule>) -> Self {
         let value = pair.into_inner().next().unwrap().as_str();
@@ -93,7 +90,6 @@ impl<'a> String<'a> {
     }
 }
 
-impl<'a> Node<'a> for Number {}
 impl<'a> Number {
     fn new(pair: Pair<'a, Rule>) -> Self {
         let value = pair.as_str().parse().unwrap();
@@ -102,7 +98,6 @@ impl<'a> Number {
     }
 }
 
-impl<'a> Node<'a> for Boolean {}
 impl<'a> Boolean {
     fn new(pair: Pair<'a, Rule>) -> Self {
         let value = pair.as_str().parse().unwrap();
@@ -111,7 +106,6 @@ impl<'a> Boolean {
     }
 }
 
-impl<'a> Node<'a> for Null {}
 impl Null {
     fn new() -> Self {
         Null {}

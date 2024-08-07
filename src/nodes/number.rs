@@ -16,14 +16,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use super::Node;
 use std::fmt;
 
 pub struct Number {
     pub value: f64,
 }
 
-impl fmt::Display for Number {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.value)
+impl<'a> Node<'a> for Number {
+    fn format(&self, indendation: usize) -> String {
+        "".to_string()
     }
 }

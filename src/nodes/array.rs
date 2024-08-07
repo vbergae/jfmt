@@ -24,22 +24,31 @@ pub struct Array<'a> {
     pub indendation: usize,
 }
 
-impl fmt::Display for Array<'_> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let contents: Vec<String> = self
+impl<'a> Node<'a> for Array<'a> {
+    fn format(&self, indendation: usize) -> String {
+        let contents = self
             .values
             .iter()
-            .map(|value| format!("{}{}", "\t".repeat(self.indendation), value))
-            .collect();
+            .fold("".to_string(), |acc, value| value.format(indendation + 1));
 
-        match contents.len() {
-            0 => write!(f, "{}", "[\n]"),
-            _ => write!(
-                f,
-                "[\n{}\n{}]",
-                contents.join(",\n"),
-                "\t".repeat(self.indendation - 1)
-            ),
-        }
+        format!("[\n{:?}\n]", contents)
+    }
+}
+
+#[cfg(test)]
+mod array_tests {
+    use super::*;
+    use crate::nodes::Null;
+
+    #[test]
+    fn test_formats_an_array_of_nulls() {
+        let array = Array {
+            values: vec![Box::new(Null {})],
+            indendation: 0,
+        };
+        let result = array.format(0);
+        let expected = "[\n  \"null\"\n]";
+
+        assert_eq!(expected, result);
     }
 }

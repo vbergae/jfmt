@@ -18,4 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 use core::fmt;
 
-pub trait Node<'a>: fmt::Display {}
+pub const TAB_SPACES: usize = 2;
+
+pub trait Node<'a> {
+    fn format(&self, indendation: usize) -> String;
+}
