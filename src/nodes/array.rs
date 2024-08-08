@@ -39,14 +39,14 @@ impl<'a> Node<'a> for Array<'a> {
 #[cfg(test)]
 mod array_tests {
     use super::*;
-    use crate::nodes::Null;
+    use crate::nodes::{Boolean, Null};
 
     #[test]
     fn test_formats_an_array_of_nulls() {
         let array = Array {
             values: vec![Box::new(Null {})],
         };
-        let expected = "[\n  \"null\"\n]";
+        let expected = "[\n  null\n]";
         let result = array.format(0);
 
         assert_eq!(expected, result);
@@ -60,7 +60,38 @@ mod array_tests {
         let root_array = Array {
             values: vec![Box::new(Null {}), Box::new(first_level_array)],
         };
-        let expected = "[\n  \"null\",\n  [\n    \"null\"\n  ]\n]";
+        let expected = "[\n  null,\n  [\n    null\n  ]\n]";
+        let result = root_array.format(0);
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn test_formats_array_of_booleans() {
+        let array = Array {
+            values: vec![
+                Box::new(Boolean { value: true }),
+                Box::new(Boolean { value: false }),
+            ],
+        };
+        let expected = "[\n  true,\n  false\n]";
+        let result = array.format(0);
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn test_formats_array_of_multidimensaionl_booleans() {
+        let first_level_array = Array {
+            values: vec![
+                Box::new(Boolean { value: true }),
+                Box::new(Boolean { value: false }),
+            ],
+        };
+        let root_array = Array {
+            values: vec![Box::new(Null {}), Box::new(first_level_array)],
+        };
+        let expected = "[\n  null,\n  [\n    true,\n    false\n  ]\n]";
         let result = root_array.format(0);
 
         assert_eq!(expected, result);
