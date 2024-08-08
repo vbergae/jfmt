@@ -16,12 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-use crate::nodes::Node;
-use std::fmt;
+use crate::nodes::{node::TAB_SPACES, Node};
 
 pub struct Array<'a> {
     pub values: Vec<Box<dyn Node<'a> + 'a>>,
-    pub indendation: usize,
 }
 
 impl<'a> Node<'a> for Array<'a> {
@@ -29,9 +27,12 @@ impl<'a> Node<'a> for Array<'a> {
         let contents = self
             .values
             .iter()
-            .fold("".to_string(), |acc, value| value.format(indendation + 1));
+            .map(|value| value.format(indendation + 1))
+            .reduce(|acc, value| format!("{acc},\n{value}"))
+            .unwrap();
 
-        format!("[\n{:?}\n]", contents)
+        let spaces = " ".repeat(indendation * TAB_SPACES);
+        format!("{spaces}[\n{contents}\n{spaces}]")
     }
 }
 
@@ -44,10 +45,23 @@ mod array_tests {
     fn test_formats_an_array_of_nulls() {
         let array = Array {
             values: vec![Box::new(Null {})],
-            indendation: 0,
         };
-        let result = array.format(0);
         let expected = "[\n  \"null\"\n]";
+        let result = array.format(0);
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn test_formats_a_multidimensional_array_of_nulls() {
+        let first_level_array = Array {
+            values: vec![Box::new(Null {})],
+        };
+        let root_array = Array {
+            values: vec![Box::new(Null {}), Box::new(first_level_array)],
+        };
+        let expected = "[\n  \"null\",\n  [\n    \"null\"\n  ]\n]";
+        let result = root_array.format(0);
 
         assert_eq!(expected, result);
     }

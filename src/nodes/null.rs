@@ -23,7 +23,7 @@ pub struct Null {}
 
 impl<'a> Node<'a> for Null {
     fn format(&self, indendation: usize) -> String {
-        format!("{}\"{}\"", " ".repeat(indendation * TAB_SPACES), "null")
+        format!("{}\"null\"", " ".repeat(indendation * TAB_SPACES))
     }
 }
 
