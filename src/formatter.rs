@@ -30,7 +30,7 @@ mod json_formatter_tests {
     #[test]
     fn it_formats_empty_object() {
         let input = "{}";
-        let expected = "{\n}";
+        let expected = "{}";
         let result = format(input);
 
         assert_eq!(result, expected);

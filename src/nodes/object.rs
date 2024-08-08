@@ -22,8 +22,32 @@ pub struct Object<'a> {
     pub members: Vec<(&'a str, Box<dyn Node<'a> + 'a>)>,
 }
 
+impl Object<'_> {
+    fn is_empty(&self) -> bool {
+        self.members.is_empty()
+    }
+}
+
 impl<'a> Node<'a> for Object<'a> {
     fn format(&self, indendation: usize) -> String {
+        if self.is_empty() {
+            return "{}".to_string();
+        }
+
         "".to_string()
+    }
+}
+
+#[cfg(test)]
+mod object_tests {
+    use super::*;
+
+    #[test]
+    fn it_formats_an_empty_object() {
+        let object = Object { members: vec![] };
+        let expected = "{}";
+        let result = object.format(0);
+
+        assert_eq!(expected, result);
     }
 }
