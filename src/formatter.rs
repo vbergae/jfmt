@@ -39,7 +39,7 @@ mod json_formatter_tests {
     #[test]
     fn it_formats_empty_array() {
         let input = "[]";
-        let expected = "[\n]";
+        let expected = "[]";
         let result = format(input);
 
         assert_eq!(result, expected);
@@ -48,7 +48,7 @@ mod json_formatter_tests {
     #[test]
     fn it_formats_an_array_with_one_boolean_element() {
         let input = "[true]";
-        let expected = "[\n\ttrue\n]";
+        let expected = "[\n  true\n]";
         let result = format(input);
 
         assert_eq!(result, expected);
@@ -57,7 +57,7 @@ mod json_formatter_tests {
     #[test]
     fn it_formats_an_array_with_many_boolean_element() {
         let input = "[true,false]";
-        let expected = "[\n\ttrue,\n\tfalse\n]";
+        let expected = "[\n  true,\n  false\n]";
         let result = format(input);
 
         assert_eq!(result, expected);
@@ -66,7 +66,7 @@ mod json_formatter_tests {
     #[test]
     fn it_formats_an_array_of_null_values() {
         let input = "[false, null, null]";
-        let expected = "[\n\tfalse,\n\tnull,\n\tnull\n]";
+        let expected = "[\n  false,\n  null,\n  null\n]";
         let result = format(input);
 
         assert_eq!(result, expected);
@@ -75,7 +75,7 @@ mod json_formatter_tests {
     #[test]
     fn it_formats_an_array_of_numbers() {
         let input = "[1, 2, -1, 5e3]";
-        let expected = "[\n\t1,\n\t2,\n\t-1,\n\t5000\n]";
+        let expected = "[\n  1,\n  2,\n  -1,\n  5000\n]";
         let result = format(input);
 
         assert_eq!(result, expected);
@@ -84,7 +84,7 @@ mod json_formatter_tests {
     #[test]
     fn it_formats_an_array_of_strings() {
         let input = "[\"hello\",\"world\"]";
-        let expected = "[\n\t\"hello\",\n\t\"world\"\n]";
+        let expected = "[\n  \"hello\",\n  \"world\"\n]";
         let result = format(input);
 
         assert_eq!(result, expected);
@@ -93,7 +93,7 @@ mod json_formatter_tests {
     #[test]
     fn it_formats_an_object() {
         let input = "{\"name\": \"Nico\",\"foo\": \"bar\"}";
-        let expected = "{\n\t\"name\": \"Nico\",\n\t\"foo\": \"bar\"\n}";
+        let expected = "{\n  \"name\": \"Nico\",\n  \"foo\": \"bar\"\n}";
         let result = format(input);
 
         assert_eq!(result, expected);
@@ -102,7 +102,7 @@ mod json_formatter_tests {
     #[test]
     fn it_formats_multidensional_arrays() {
         let input = "[1, [3]]";
-        let expected = "[\n\t1,\n\t[\n\t\t3\n\t]\n]";
+        let expected = "[\n  1,\n  [\n    3\n  ]\n]";
         let result = format(input);
 
         assert_eq!(result, expected);

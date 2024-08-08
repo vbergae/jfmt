@@ -36,7 +36,7 @@ mod null_tests {
         let null = Null {};
         let result = null.format(0);
 
-        assert_eq!("\"null\"", result);
+        assert_eq!("null", result);
     }
 
     #[test]
@@ -44,6 +44,6 @@ mod null_tests {
         let null = Null {};
         let result = null.format(1);
 
-        assert_eq!("  \"null\"", result);
+        assert_eq!("  null", result);
     }
 }

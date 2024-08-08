@@ -22,16 +22,29 @@ pub struct Array<'a> {
     pub values: Vec<Box<dyn Node<'a> + 'a>>,
 }
 
+impl Array<'_> {
+    fn is_empty(&self) -> bool {
+        self.values.is_empty()
+    }
+
+    fn format_contents(&self, with_indendation: usize) -> String {
+        self.values
+            .iter()
+            .map(|value| value.format(with_indendation + 1))
+            .reduce(|acc, value| format!("{acc},\n{value}"))
+            .unwrap_or("".to_string())
+    }
+}
+
 impl<'a> Node<'a> for Array<'a> {
     fn format(&self, indendation: usize) -> String {
-        let contents = self
-            .values
-            .iter()
-            .map(|value| value.format(indendation + 1))
-            .reduce(|acc, value| format!("{acc},\n{value}"))
-            .unwrap();
+        if self.is_empty() {
+            return "[]".to_string();
+        }
 
+        let contents = self.format_contents(indendation);
         let spaces = " ".repeat(indendation * TAB_SPACES);
+
         format!("{spaces}[\n{contents}\n{spaces}]")
     }
 }
@@ -42,7 +55,16 @@ mod array_tests {
     use crate::nodes::{Boolean, Null};
 
     #[test]
-    fn test_formats_an_array_of_nulls() {
+    fn it_formats_empty_array() {
+        let array = Array { values: vec![] };
+        let expected = "[]";
+        let result = array.format(0);
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn it_formats_an_array_of_nulls() {
         let array = Array {
             values: vec![Box::new(Null {})],
         };
@@ -53,7 +75,7 @@ mod array_tests {
     }
 
     #[test]
-    fn test_formats_a_multidimensional_array_of_nulls() {
+    fn it_formats_a_multidimensional_array_of_nulls() {
         let first_level_array = Array {
             values: vec![Box::new(Null {})],
         };
@@ -67,7 +89,7 @@ mod array_tests {
     }
 
     #[test]
-    fn test_formats_array_of_booleans() {
+    fn it_formats_array_of_booleans() {
         let array = Array {
             values: vec![
                 Box::new(Boolean { value: true }),
@@ -81,7 +103,7 @@ mod array_tests {
     }
 
     #[test]
-    fn test_formats_array_of_multidimensaionl_booleans() {
+    fn it_formats_array_of_multidimensaionl_booleans() {
         let first_level_array = Array {
             values: vec![
                 Box::new(Boolean { value: true }),
