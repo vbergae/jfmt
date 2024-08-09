@@ -16,6 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+use crate::nodes::node::TAB_SPACES;
+
 use super::Node;
 
 pub struct Object<'a> {
@@ -26,6 +28,21 @@ impl Object<'_> {
     fn is_empty(&self) -> bool {
         self.members.is_empty()
     }
+
+    fn format_contents(&self, with_indendation: usize) -> String {
+        self.members
+            .iter()
+            .map(|member| {
+                format!(
+                    "{}\"{}\": {}",
+                    " ".repeat((with_indendation + 1) * TAB_SPACES),
+                    member.0,
+                    member.1.format(with_indendation)
+                )
+            })
+            .reduce(|acc, member| format!("{acc},\n{member}"))
+            .unwrap_or("".to_string())
+    }
 }
 
 impl<'a> Node<'a> for Object<'a> {
@@ -34,7 +51,9 @@ impl<'a> Node<'a> for Object<'a> {
             return "{}".to_string();
         }
 
-        "".to_string()
+        let contents = self.format_contents(indendation);
+
+        format!("{{\n{contents}\n}}")
     }
 }
 
@@ -42,10 +61,41 @@ impl<'a> Node<'a> for Object<'a> {
 mod object_tests {
     use super::*;
 
+    use crate::nodes::{Number, String};
+
     #[test]
     fn it_formats_an_empty_object() {
         let object = Object { members: vec![] };
         let expected = "{}";
+        let result = object.format(0);
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn it_formats_an_object() {
+        let object = Object {
+            members: vec![("member", Box::new(String { value: "value" }))],
+        };
+        let expected = "{\n  \"member\": \"value\"\n}";
+        let result = object.format(0);
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn it_formats_a_multidimensional_object() {
+        let first_level_object = Object {
+            members: vec![("member", Box::new(String { value: "value" }))],
+        };
+        let object = Object {
+            members: vec![
+                ("member", Box::new(String { value: "value" })),
+                ("number", Box::new(Number { value: 2.0 })),
+                ("child", Box::new(first_level_object)),
+            ],
+        };
+        let expected = "{\n  \"member\": \"value\",\n  \"number\": 2,\n  \"child\": {\n    \"member\": \"value\"\n  }\n}";
         let result = object.format(0);
 
         assert_eq!(expected, result);
