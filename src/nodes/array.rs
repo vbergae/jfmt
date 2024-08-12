@@ -16,30 +16,106 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-use crate::nodes::Node;
-use std::fmt;
+use crate::nodes::{node::TAB_SPACES, Node};
 
 pub struct Array<'a> {
     pub values: Vec<Box<dyn Node<'a> + 'a>>,
-    pub indendation: usize,
 }
 
-impl fmt::Display for Array<'_> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        let contents: Vec<String> = self
-            .values
-            .iter()
-            .map(|value| format!("{}{}", "\t".repeat(self.indendation), value))
-            .collect();
+impl Array<'_> {
+    fn is_empty(&self) -> bool {
+        self.values.is_empty()
+    }
 
-        match contents.len() {
-            0 => write!(f, "{}", "[\n]"),
-            _ => write!(
-                f,
-                "[\n{}\n{}]",
-                contents.join(",\n"),
-                "\t".repeat(self.indendation - 1)
-            ),
+    fn format_contents(&self, with_indendation: usize) -> String {
+        self.values
+            .iter()
+            .map(|value| value.format(with_indendation + 1))
+            .reduce(|acc, value| format!("{acc},\n{value}"))
+            .unwrap_or("".to_string())
+    }
+}
+
+impl<'a> Node<'a> for Array<'a> {
+    fn format(&self, indendation: usize) -> String {
+        if self.is_empty() {
+            return "[]".to_string();
         }
+
+        let contents = self.format_contents(indendation);
+        let spaces = " ".repeat(indendation * TAB_SPACES);
+
+        format!("{spaces}[\n{contents}\n{spaces}]")
+    }
+}
+
+#[cfg(test)]
+mod array_tests {
+    use super::*;
+    use crate::nodes::{Boolean, Null};
+
+    #[test]
+    fn it_formats_empty_array() {
+        let array = Array { values: vec![] };
+        let expected = "[]";
+        let result = array.format(0);
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn it_formats_an_array_of_nulls() {
+        let array = Array {
+            values: vec![Box::new(Null {})],
+        };
+        let expected = "[\n  null\n]";
+        let result = array.format(0);
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn it_formats_a_multidimensional_array_of_nulls() {
+        let first_level_array = Array {
+            values: vec![Box::new(Null {})],
+        };
+        let root_array = Array {
+            values: vec![Box::new(Null {}), Box::new(first_level_array)],
+        };
+        let expected = "[\n  null,\n  [\n    null\n  ]\n]";
+        let result = root_array.format(0);
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn it_formats_array_of_booleans() {
+        let array = Array {
+            values: vec![
+                Box::new(Boolean { value: true }),
+                Box::new(Boolean { value: false }),
+            ],
+        };
+        let expected = "[\n  true,\n  false\n]";
+        let result = array.format(0);
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn it_formats_array_of_multidimensaionl_booleans() {
+        let first_level_array = Array {
+            values: vec![
+                Box::new(Boolean { value: true }),
+                Box::new(Boolean { value: false }),
+            ],
+        };
+        let root_array = Array {
+            values: vec![Box::new(Null {}), Box::new(first_level_array)],
+        };
+        let expected = "[\n  null,\n  [\n    true,\n    false\n  ]\n]";
+        let result = root_array.format(0);
+
+        assert_eq!(expected, result);
     }
 }

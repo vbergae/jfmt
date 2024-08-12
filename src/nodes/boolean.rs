@@ -16,14 +16,58 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-use std::fmt;
+use crate::nodes::node::TAB_SPACES;
+
+use super::Node;
 
 pub struct Boolean {
     pub value: bool,
 }
 
-impl fmt::Display for Boolean {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.value)
+impl<'a> Node<'a> for Boolean {
+    fn format(&self, indendation: usize) -> String {
+        let value = self.value;
+        format!("{}{value}", " ".repeat(indendation * TAB_SPACES))
+    }
+}
+
+#[cfg(test)]
+mod boolean_tests {
+    use super::*;
+
+    #[test]
+    fn test_formats_true_boolean() {
+        let value = Boolean { value: true };
+        let expected = "true";
+        let result = value.format(0);
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn test_formats_true_boolean_with_indendation() {
+        let value = Boolean { value: true };
+        let expected = "  true";
+        let result = value.format(1);
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn test_formats_false_boolean() {
+        let value = Boolean { value: false };
+        let expected = "false";
+        let result = value.format(0);
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn test_formats_false_boolean_with_indendation() {
+        let value = Boolean { value: false };
+        let expected = "  false";
+        let result = value.format(1);
+
+        assert_eq!(expected, result);
     }
 }

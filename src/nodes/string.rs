@@ -16,14 +16,40 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-use std::fmt;
+use crate::nodes::node::TAB_SPACES;
+
+use super::Node;
 
 pub struct String<'a> {
     pub value: &'a str,
 }
 
-impl fmt::Display for String<'_> {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "\"{}\"", self.value)
+impl<'a> Node<'a> for String<'a> {
+    fn format(&self, indendation: usize) -> std::string::String {
+        let value = self.value;
+        format!("{}\"{value}\"", " ".repeat(indendation * TAB_SPACES))
+    }
+}
+
+#[cfg(test)]
+mod string_tests {
+    use super::*;
+
+    #[test]
+    fn it_formats_string() {
+        let string = String { value: "foo" };
+        let expected = "\"foo\"";
+        let result = string.format(0);
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn it_formats_string_with_indendation() {
+        let string = String { value: "foo" };
+        let expected = "  \"foo\"";
+        let result = string.format(1);
+
+        assert_eq!(expected, result);
     }
 }

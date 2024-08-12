@@ -25,17 +25,17 @@ use pest_derive::Parser;
 pub fn parse(json: &str) -> Result<Box<dyn Node + '_>, Error<Rule>> {
     let json = JSONParser::parse(Rule::json, json)?.next().unwrap();
 
-    Ok(parse_value(json, 1))
+    Ok(parse_value(json))
 }
 
 #[derive(Parser)]
 #[grammar = "json.pest"]
 struct JSONParser;
 
-pub fn parse_value<'a>(pair: Pair<'a, Rule>, indendation: usize) -> Box<dyn Node<'a> + 'a> {
+pub fn parse_value<'a>(pair: Pair<'a, Rule>) -> Box<dyn Node<'a> + 'a> {
     match pair.as_rule() {
         Rule::object => Box::new(Object::new(pair)),
-        Rule::array => Box::new(Array::new(pair, indendation)),
+        Rule::array => Box::new(Array::new(pair)),
         Rule::string => Box::new(String::new(pair)),
         Rule::number => Box::new(Number::new(pair)),
         Rule::boolean => Box::new(Boolean::new(pair)),
@@ -44,7 +44,6 @@ pub fn parse_value<'a>(pair: Pair<'a, Rule>, indendation: usize) -> Box<dyn Node
     }
 }
 
-impl<'a> Node<'a> for Object<'a> {}
 impl<'a> Object<'a> {
     fn new(pair: Pair<'a, Rule>) -> Self {
         let attributes = pair
@@ -58,7 +57,7 @@ impl<'a> Object<'a> {
                     .next()
                     .unwrap()
                     .as_str();
-                let value = parse_value(inner_rules.next().unwrap(), 1);
+                let value = parse_value(inner_rules.next().unwrap());
                 (name, value)
             })
             .collect();
@@ -69,22 +68,14 @@ impl<'a> Object<'a> {
     }
 }
 
-impl<'a> Node<'a> for Array<'a> {}
 impl<'a> Array<'a> {
-    fn new(pair: Pair<'a, Rule>, indendation: usize) -> Self {
-        let values = pair
-            .into_inner()
-            .map(|pair| parse_value(pair, indendation + 1))
-            .collect();
+    fn new(pair: Pair<'a, Rule>) -> Self {
+        let values = pair.into_inner().map(|pair| parse_value(pair)).collect();
 
-        Array {
-            values,
-            indendation,
-        }
+        Array { values }
     }
 }
 
-impl<'a> Node<'a> for String<'a> {}
 impl<'a> String<'a> {
     fn new(pair: Pair<'a, Rule>) -> Self {
         let value = pair.into_inner().next().unwrap().as_str();
@@ -93,7 +84,6 @@ impl<'a> String<'a> {
     }
 }
 
-impl<'a> Node<'a> for Number {}
 impl<'a> Number {
     fn new(pair: Pair<'a, Rule>) -> Self {
         let value = pair.as_str().parse().unwrap();
@@ -102,7 +92,6 @@ impl<'a> Number {
     }
 }
 
-impl<'a> Node<'a> for Boolean {}
 impl<'a> Boolean {
     fn new(pair: Pair<'a, Rule>) -> Self {
         let value = pair.as_str().parse().unwrap();
@@ -111,7 +100,6 @@ impl<'a> Boolean {
     }
 }
 
-impl<'a> Node<'a> for Null {}
 impl Null {
     fn new() -> Self {
         Null {}

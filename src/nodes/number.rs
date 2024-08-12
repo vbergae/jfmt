@@ -16,14 +16,58 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-use std::fmt;
+use crate::nodes::node::TAB_SPACES;
+
+use super::Node;
 
 pub struct Number {
     pub value: f64,
 }
 
-impl fmt::Display for Number {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.value)
+impl<'a> Node<'a> for Number {
+    fn format(&self, indendation: usize) -> String {
+        let value = self.value;
+        format!("{}{value}", " ".repeat(indendation * TAB_SPACES))
+    }
+}
+
+#[cfg(test)]
+mod number_tests {
+    use super::*;
+
+    #[test]
+    fn it_formats_positive_value() {
+        let number = Number { value: 2.0 };
+        let expected = "2";
+        let result = number.format(0);
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn it_formats_positive_value_with_indendation() {
+        let number = Number { value: 2.0 };
+        let expected = "  2";
+        let result = number.format(1);
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn it_formats_negative_value() {
+        let number = Number { value: -2.0 };
+        let expected = "-2";
+        let result = number.format(0);
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn it_formats_negative_value_with_indendation() {
+        let number = Number { value: -2.0 };
+        let expected = "  -2";
+        let result = number.format(1);
+
+        assert_eq!(expected, result);
     }
 }
