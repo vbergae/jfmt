@@ -14,7 +14,7 @@ To build and install `jfmt`, you need to have [Rust](https://www.rust-lang.org/t
 
 1. Clone the repository:
     ```sh
-    git clone https://github.com/yourusername/jfmt.git
+    git clone https://github.com/vbergae/jfmt.git
     cd jfmt
     ```
 
@@ -27,20 +27,6 @@ To build and install `jfmt`, you need to have [Rust](https://www.rust-lang.org/t
     ```sh
     cargo install --path .
     ```
-
-## Usage
-
-After installation, you can use `jfmt` from the terminal:
-
-```sh
-jfmt < input.json
-```
-
-Alternatively, you can pipe JSON data to `jfmt`:
-
-```sh
-echo '{"name":"John","age":30,"city":"New York"}' | jfmt
-```
 
 ## Examples
 
