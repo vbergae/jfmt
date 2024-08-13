@@ -58,4 +58,31 @@ mod number_tests {
 
         assert_eq!(expected, result);
     }
+
+    #[test]
+    fn it_formats_positive_value_as_child() {
+        let number = Number { value: 2.0 };
+        let expected = "2";
+        let result = number.format_as_child(0);
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn it_formats_negative_value_as_child() {
+        let number = Number { value: -2.0 };
+        let expected = "-2";
+        let result = number.format_as_child(0);
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn it_formats_positive_value_as_root() {
+        let number = Number { value: 2.0 };
+        let expected = "2";
+        let result = number.format_as_root();
+
+        assert_eq!(expected, result);
+    }
 }
