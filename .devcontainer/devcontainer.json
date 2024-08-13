@@ -8,7 +8,15 @@
         "vscode": {
             "extensions": [
                 "pest.pest-ide-tools",
-                "1YiB.rust-bundle"
+                "1YiB.rust-bundle",
+                "vadimcn.vscode-lldb",
+                "fill-labs.dependi",
+                "tamasfe.even-better-toml",
+                "GitHub.copilot",
+                "GitHub.copilot-chat",
+                "GitHub.vscode-pull-request-github",
+                "rust-lang.rust-analyzer",
+                "dustypomerleau.rust-syntax"
             ]
         }
     }

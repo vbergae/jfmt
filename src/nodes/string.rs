@@ -16,8 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-use crate::nodes::node::TAB_SPACES;
-
 use super::Node;
 
 pub struct String<'a> {
@@ -25,9 +23,17 @@ pub struct String<'a> {
 }
 
 impl<'a> Node<'a> for String<'a> {
-    fn format(&self, indendation: usize) -> std::string::String {
+    fn format(&self) -> std::string::String {
         let value = self.value;
-        format!("{}\"{value}\"", " ".repeat(indendation * TAB_SPACES))
+        format!("\"{value}\"")
+    }
+
+    fn format_as_child(&self, _tabs: usize) -> std::string::String {
+        self.format()
+    }
+
+    fn format_root(&self) -> std::string::String {
+        self.format()
     }
 }
 
@@ -39,16 +45,7 @@ mod string_tests {
     fn it_formats_string() {
         let string = String { value: "foo" };
         let expected = "\"foo\"";
-        let result = string.format(0);
-
-        assert_eq!(expected, result);
-    }
-
-    #[test]
-    fn it_formats_string_with_indendation() {
-        let string = String { value: "foo" };
-        let expected = "  \"foo\"";
-        let result = string.format(1);
+        let result = string.format();
 
         assert_eq!(expected, result);
     }

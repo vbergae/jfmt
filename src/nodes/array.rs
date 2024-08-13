@@ -27,25 +27,44 @@ impl Array<'_> {
         self.values.is_empty()
     }
 
-    fn format_contents(&self, with_indendation: usize) -> String {
+    fn format_children(&self, tabs: usize) -> String {
         self.values
             .iter()
-            .map(|value| value.format(with_indendation + 1))
+            .map(|value| {
+                format!(
+                    "{}{}",
+                    " ".repeat(tabs * TAB_SPACES),
+                    value.format_as_child(tabs)
+                )
+            })
             .reduce(|acc, value| format!("{acc},\n{value}"))
             .unwrap_or("".to_string())
     }
 }
 
 impl<'a> Node<'a> for Array<'a> {
-    fn format(&self, indendation: usize) -> String {
+    fn format(&self) -> String {
+        self.format_as_child(0)
+    }
+
+    fn format_as_child(&self, tabs: usize) -> std::string::String {
         if self.is_empty() {
             return "[]".to_string();
         }
 
-        let contents = self.format_contents(indendation);
-        let spaces = " ".repeat(indendation * TAB_SPACES);
+        format!(
+            "[\n{contents}\n{spaces}]",
+            contents = self.format_children(tabs + 1),
+            spaces = " ".repeat(tabs * TAB_SPACES)
+        )
+    }
 
-        format!("{spaces}[\n{contents}\n{spaces}]")
+    fn format_root(&self) -> std::string::String {
+        if self.is_empty() {
+            return "[]".to_string();
+        }
+
+        format!("[\n{contents}\n]", contents = self.format_children(1))
     }
 }
 
@@ -58,7 +77,7 @@ mod array_tests {
     fn it_formats_empty_array() {
         let array = Array { values: vec![] };
         let expected = "[]";
-        let result = array.format(0);
+        let result = array.format_root();
 
         assert_eq!(expected, result);
     }
@@ -69,7 +88,7 @@ mod array_tests {
             values: vec![Box::new(Null {})],
         };
         let expected = "[\n  null\n]";
-        let result = array.format(0);
+        let result = array.format_root();
 
         assert_eq!(expected, result);
     }
@@ -83,7 +102,7 @@ mod array_tests {
             values: vec![Box::new(Null {}), Box::new(first_level_array)],
         };
         let expected = "[\n  null,\n  [\n    null\n  ]\n]";
-        let result = root_array.format(0);
+        let result = root_array.format_root();
 
         assert_eq!(expected, result);
     }
@@ -97,7 +116,7 @@ mod array_tests {
             ],
         };
         let expected = "[\n  true,\n  false\n]";
-        let result = array.format(0);
+        let result = array.format_root();
 
         assert_eq!(expected, result);
     }
@@ -114,7 +133,7 @@ mod array_tests {
             values: vec![Box::new(Null {}), Box::new(first_level_array)],
         };
         let expected = "[\n  null,\n  [\n    true,\n    false\n  ]\n]";
-        let result = root_array.format(0);
+        let result = root_array.format_root();
 
         assert_eq!(expected, result);
     }

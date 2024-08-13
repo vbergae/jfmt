@@ -29,16 +29,15 @@ impl Object<'_> {
         self.members.is_empty()
     }
 
-    fn format_contents(&self, with_indendation: usize) -> String {
+    fn format_children(&self, tabs: usize) -> String {
         self.members
             .iter()
             .map(|member| {
-                format!(
-                    "{}\"{}\": {}",
-                    " ".repeat((with_indendation + 1) * TAB_SPACES),
-                    member.0,
-                    member.1.format(with_indendation)
-                )
+                let indendation = " ".repeat(tabs * TAB_SPACES);
+                let attribute = member.0;
+                let value = member.1.format_as_child(tabs);
+
+                format!("{indendation}\"{attribute}\": {value}")
             })
             .reduce(|acc, member| format!("{acc},\n{member}"))
             .unwrap_or("".to_string())
@@ -46,13 +45,28 @@ impl Object<'_> {
 }
 
 impl<'a> Node<'a> for Object<'a> {
-    fn format(&self, indendation: usize) -> String {
+    fn format(&self) -> String {
+        self.format_as_child(0)
+    }
+
+    fn format_as_child(&self, tabs: usize) -> std::string::String {
         if self.is_empty() {
             return "{}".to_string();
         }
 
-        let contents = self.format_contents(indendation);
+        format!(
+            "{{\n{contents}\n{spaces}}}",
+            contents = self.format_children(tabs + 1),
+            spaces = " ".repeat(tabs * TAB_SPACES)
+        )
+    }
 
+    fn format_root(&self) -> std::string::String {
+        if self.is_empty() {
+            return "{}".to_string();
+        }
+
+        let contents = self.format_children(1);
         format!("{{\n{contents}\n}}")
     }
 }
@@ -67,7 +81,7 @@ mod object_tests {
     fn it_formats_an_empty_object() {
         let object = Object { members: vec![] };
         let expected = "{}";
-        let result = object.format(0);
+        let result = object.format_root();
 
         assert_eq!(expected, result);
     }
@@ -78,7 +92,7 @@ mod object_tests {
             members: vec![("member", Box::new(String { value: "value" }))],
         };
         let expected = "{\n  \"member\": \"value\"\n}";
-        let result = object.format(0);
+        let result = object.format_root();
 
         assert_eq!(expected, result);
     }
@@ -96,7 +110,7 @@ mod object_tests {
             ],
         };
         let expected = "{\n  \"member\": \"value\",\n  \"number\": 2,\n  \"child\": {\n    \"member\": \"value\"\n  }\n}";
-        let result = object.format(0);
+        let result = object.format_root();
 
         assert_eq!(expected, result);
     }

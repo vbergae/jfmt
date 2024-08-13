@@ -16,8 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-use crate::nodes::node::TAB_SPACES;
-
 use super::Node;
 
 pub struct Number {
@@ -25,9 +23,17 @@ pub struct Number {
 }
 
 impl<'a> Node<'a> for Number {
-    fn format(&self, indendation: usize) -> String {
+    fn format(&self) -> String {
         let value = self.value;
-        format!("{}{value}", " ".repeat(indendation * TAB_SPACES))
+        format!("{value}")
+    }
+
+    fn format_as_child(&self, _tabs: usize) -> std::string::String {
+        self.format()
+    }
+
+    fn format_root(&self) -> std::string::String {
+        self.format()
     }
 }
 
@@ -39,16 +45,7 @@ mod number_tests {
     fn it_formats_positive_value() {
         let number = Number { value: 2.0 };
         let expected = "2";
-        let result = number.format(0);
-
-        assert_eq!(expected, result);
-    }
-
-    #[test]
-    fn it_formats_positive_value_with_indendation() {
-        let number = Number { value: 2.0 };
-        let expected = "  2";
-        let result = number.format(1);
+        let result = number.format();
 
         assert_eq!(expected, result);
     }
@@ -57,16 +54,7 @@ mod number_tests {
     fn it_formats_negative_value() {
         let number = Number { value: -2.0 };
         let expected = "-2";
-        let result = number.format(0);
-
-        assert_eq!(expected, result);
-    }
-
-    #[test]
-    fn it_formats_negative_value_with_indendation() {
-        let number = Number { value: -2.0 };
-        let expected = "  -2";
-        let result = number.format(1);
+        let result = number.format();
 
         assert_eq!(expected, result);
     }

@@ -16,14 +16,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-use crate::nodes::node::TAB_SPACES;
 use crate::nodes::Node;
 
 pub struct Null {}
 
 impl<'a> Node<'a> for Null {
-    fn format(&self, indendation: usize) -> String {
-        format!("{}null", " ".repeat(indendation * TAB_SPACES))
+    fn format(&self) -> String {
+        format!("null")
+    }
+
+    fn format_as_child(&self, _tabs: usize) -> std::string::String {
+        self.format()
+    }
+
+    fn format_root(&self) -> std::string::String {
+        self.format()
     }
 }
 
@@ -34,16 +41,8 @@ mod null_tests {
     #[test]
     fn test_formats_null_without_indendation() {
         let null = Null {};
-        let result = null.format(0);
+        let result = null.format();
 
         assert_eq!("null", result);
-    }
-
-    #[test]
-    fn test_formats_null_with_indendation() {
-        let null = Null {};
-        let result = null.format(1);
-
-        assert_eq!("  null", result);
     }
 }

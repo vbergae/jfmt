@@ -19,5 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 pub const TAB_SPACES: usize = 2;
 
 pub trait Node<'a> {
-    fn format(&self, indendation: usize) -> String;
+    fn format(&self) -> std::string::String;
+
+    fn format_as_child(&self, _tabs: usize) -> std::string::String;
+
+    fn format_root(&self) -> std::string::String;
 }

@@ -16,8 +16,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-use crate::nodes::node::TAB_SPACES;
-
 use super::Node;
 
 pub struct Boolean {
@@ -25,9 +23,17 @@ pub struct Boolean {
 }
 
 impl<'a> Node<'a> for Boolean {
-    fn format(&self, indendation: usize) -> String {
+    fn format(&self) -> String {
         let value = self.value;
-        format!("{}{value}", " ".repeat(indendation * TAB_SPACES))
+        format!("{value}")
+    }
+
+    fn format_as_child(&self, _tabs: usize) -> std::string::String {
+        self.format()
+    }
+
+    fn format_root(&self) -> std::string::String {
+        self.format()
     }
 }
 
@@ -39,16 +45,7 @@ mod boolean_tests {
     fn test_formats_true_boolean() {
         let value = Boolean { value: true };
         let expected = "true";
-        let result = value.format(0);
-
-        assert_eq!(expected, result);
-    }
-
-    #[test]
-    fn test_formats_true_boolean_with_indendation() {
-        let value = Boolean { value: true };
-        let expected = "  true";
-        let result = value.format(1);
+        let result = value.format();
 
         assert_eq!(expected, result);
     }
@@ -57,16 +54,7 @@ mod boolean_tests {
     fn test_formats_false_boolean() {
         let value = Boolean { value: false };
         let expected = "false";
-        let result = value.format(0);
-
-        assert_eq!(expected, result);
-    }
-
-    #[test]
-    fn test_formats_false_boolean_with_indendation() {
-        let value = Boolean { value: false };
-        let expected = "  false";
-        let result = value.format(1);
+        let result = value.format();
 
         assert_eq!(expected, result);
     }
