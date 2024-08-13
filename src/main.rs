@@ -29,6 +29,9 @@ fn main() {
 use clap::Parser;
 
 #[derive(Parser)]
+#[command(name = env!("CARGO_PKG_NAME"))]
+#[command(about = env!("CARGO_PKG_DESCRIPTION"))]
+#[command(version = env!("CARGO_PKG_VERSION"))]
 struct Cli {
     json: String,
 }
