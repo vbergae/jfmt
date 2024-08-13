@@ -45,4 +45,20 @@ mod null_tests {
 
         assert_eq!("null", result);
     }
+
+    #[test]
+    fn test_formats_null_as_child() {
+        let null = Null {};
+        let result = null.format_as_child(0);
+
+        assert_eq!("null", result);
+    }
+
+    #[test]
+    fn test_formats_null_as_root() {
+        let null = Null {};
+        let result = null.format_as_root();
+
+        assert_eq!("null", result);
+    }
 }
