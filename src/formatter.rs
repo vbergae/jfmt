@@ -20,7 +20,7 @@ use crate::parser::parse;
 
 pub fn format(json: &str) -> String {
     let value = parse(json).expect("Invalid json");
-    value.format_root()
+    value.format_as_root()
 }
 
 #[cfg(test)]

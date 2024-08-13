@@ -59,7 +59,7 @@ impl<'a> Node<'a> for Array<'a> {
         )
     }
 
-    fn format_root(&self) -> std::string::String {
+    fn format_as_root(&self) -> std::string::String {
         if self.is_empty() {
             return "[]".to_string();
         }
@@ -77,7 +77,7 @@ mod array_tests {
     fn it_formats_empty_array() {
         let array = Array { values: vec![] };
         let expected = "[]";
-        let result = array.format_root();
+        let result = array.format_as_root();
 
         assert_eq!(expected, result);
     }
@@ -88,7 +88,7 @@ mod array_tests {
             values: vec![Box::new(Null {})],
         };
         let expected = "[\n  null\n]";
-        let result = array.format_root();
+        let result = array.format_as_root();
 
         assert_eq!(expected, result);
     }
@@ -102,7 +102,7 @@ mod array_tests {
             values: vec![Box::new(Null {}), Box::new(first_level_array)],
         };
         let expected = "[\n  null,\n  [\n    null\n  ]\n]";
-        let result = root_array.format_root();
+        let result = root_array.format_as_root();
 
         assert_eq!(expected, result);
     }
@@ -116,7 +116,7 @@ mod array_tests {
             ],
         };
         let expected = "[\n  true,\n  false\n]";
-        let result = array.format_root();
+        let result = array.format_as_root();
 
         assert_eq!(expected, result);
     }
@@ -133,7 +133,7 @@ mod array_tests {
             values: vec![Box::new(Null {}), Box::new(first_level_array)],
         };
         let expected = "[\n  null,\n  [\n    true,\n    false\n  ]\n]";
-        let result = root_array.format_root();
+        let result = root_array.format_as_root();
 
         assert_eq!(expected, result);
     }

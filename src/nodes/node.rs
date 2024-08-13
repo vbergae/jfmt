@@ -21,7 +21,7 @@ pub const TAB_SPACES: usize = 2;
 pub trait Node<'a> {
     fn format(&self) -> std::string::String;
 
-    fn format_as_child(&self, _tabs: usize) -> std::string::String;
+    fn format_as_child(&self, tabs: usize) -> std::string::String;
 
-    fn format_root(&self) -> std::string::String;
+    fn format_as_root(&self) -> std::string::String;
 }

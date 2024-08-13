@@ -32,7 +32,7 @@ impl<'a> Node<'a> for Boolean {
         self.format()
     }
 
-    fn format_root(&self) -> std::string::String {
+    fn format_as_root(&self) -> std::string::String {
         self.format()
     }
 }
@@ -81,7 +81,7 @@ mod boolean_tests {
     fn test_formats_true_boolean_as_root() {
         let value = Boolean { value: true };
         let expected = "true";
-        let result = value.format_root();
+        let result = value.format_as_root();
 
         assert_eq!(expected, result);
     }
@@ -90,7 +90,7 @@ mod boolean_tests {
     fn test_formats_false_boolean_as_root() {
         let value = Boolean { value: false };
         let expected = "false";
-        let result = value.format_root();
+        let result = value.format_as_root();
 
         assert_eq!(expected, result);
     }

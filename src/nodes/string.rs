@@ -32,7 +32,7 @@ impl<'a> Node<'a> for String<'a> {
         self.format()
     }
 
-    fn format_root(&self) -> std::string::String {
+    fn format_as_root(&self) -> std::string::String {
         self.format()
     }
 }
@@ -63,7 +63,7 @@ mod string_tests {
     fn it_formats_string_as_root() {
         let string = String { value: "foo" };
         let expected = "\"foo\"";
-        let result = string.format_root();
+        let result = string.format_as_root();
 
         assert_eq!(expected, result);
     }

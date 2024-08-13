@@ -61,7 +61,7 @@ impl<'a> Node<'a> for Object<'a> {
         )
     }
 
-    fn format_root(&self) -> std::string::String {
+    fn format_as_root(&self) -> std::string::String {
         if self.is_empty() {
             return "{}".to_string();
         }
@@ -81,7 +81,7 @@ mod object_tests {
     fn it_formats_an_empty_object() {
         let object = Object { members: vec![] };
         let expected = "{}";
-        let result = object.format_root();
+        let result = object.format_as_root();
 
         assert_eq!(expected, result);
     }
@@ -92,7 +92,7 @@ mod object_tests {
             members: vec![("member", Box::new(String { value: "value" }))],
         };
         let expected = "{\n  \"member\": \"value\"\n}";
-        let result = object.format_root();
+        let result = object.format_as_root();
 
         assert_eq!(expected, result);
     }
@@ -110,7 +110,7 @@ mod object_tests {
             ],
         };
         let expected = "{\n  \"member\": \"value\",\n  \"number\": 2,\n  \"child\": {\n    \"member\": \"value\"\n  }\n}";
-        let result = object.format_root();
+        let result = object.format_as_root();
 
         assert_eq!(expected, result);
     }

@@ -32,7 +32,7 @@ impl<'a> Node<'a> for Number {
         self.format()
     }
 
-    fn format_root(&self) -> std::string::String {
+    fn format_as_root(&self) -> std::string::String {
         self.format()
     }
 }
