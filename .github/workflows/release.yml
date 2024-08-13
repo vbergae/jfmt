@@ -9,7 +9,8 @@ env:
   RELEASE_BIN: jfmt
   RELEASE_DIR: artifacts
   GITHUB_REF: '${{ github.ref }}'
-  MACOS_TARGET: x86_64-apple-darwin
+  MACOS_AMD64_TARGET: x86_64-apple-darwin
+  MACOS_ARM64_TARGET: aarch64-apple-darwin
   LINUX_AMD64_TARGET: x86_64-unknown-linux-musl
   LINUX_ARM64_TARGET: aarch64-unknown-linux-musl
 
@@ -30,6 +31,9 @@ jobs:
             os: ubuntu-latest
             rust: stable
           - target: x86_64-apple-darwin
+            os: macos-latest
+            rust: stable
+          - target: aarch64-apple-darwin
             os: macos-latest
             rust: stable
 
@@ -118,10 +122,15 @@ jobs:
         with:
           name: ${{ env.LINUX_ARM64_TARGET }}
 
-      - name: Download MacOS tarball
+      - name: Download MacOS amd64 tarball
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.MACOS_TARGET }}
+          name: ${{ env.MACOS_AMD64_TARGET }}
+
+      - name: Download MacOS arm64 tarball
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.MACOS_ARM64_TARGET }}
 
       - name: Release Linux amd64 tarball
         uses: actions/upload-release-asset@v1
@@ -143,12 +152,22 @@ jobs:
           asset_content_type: application/gzip
           asset_name: jfmt-${{ steps.get_version.outputs.VERSION }}-${{ env.LINUX_ARM64_TARGET }}.tar.gz
 
-      - name: Release MacOS tarball
+      - name: Release MacOS amd 64 tarball
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./jfmt-${{ steps.get_version.outputs.VERSION }}-${{ env.MACOS_TARGET }}.tar.gz
+          asset_path: ./jfmt-${{ steps.get_version.outputs.VERSION }}-${{ env.MACOS_AMD64_TARGET }}.tar.gz
           asset_content_type: application/gzip
-          asset_name: jfmt-${{ steps.get_version.outputs.VERSION }}-${{ env.MACOS_TARGET }}.tar.gz
+          asset_name: jfmt-${{ steps.get_version.outputs.VERSION }}-${{ env.MACOS_AMD64_TARGET }}.tar.gz
+      
+      - name: Release MacOS arm 64 tarball
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./jfmt-${{ steps.get_version.outputs.VERSION }}-${{ env.MACOS_ARM64_TARGET }}.tar.gz
+          asset_content_type: application/gzip
+          asset_name: jfmt-${{ steps.get_version.outputs.VERSION }}-${{ env.MACOS_ARM64_TARGET }}.tar.gz
