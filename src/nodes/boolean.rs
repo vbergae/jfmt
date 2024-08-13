@@ -58,4 +58,40 @@ mod boolean_tests {
 
         assert_eq!(expected, result);
     }
+
+    #[test]
+    fn test_formats_true_boolean_as_child() {
+        let value = Boolean { value: true };
+        let expected = "true";
+        let result = value.format_as_child(0);
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn test_formats_false_boolean_as_child() {
+        let value = Boolean { value: false };
+        let expected = "false";
+        let result = value.format_as_child(0);
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn test_formats_true_boolean_as_root() {
+        let value = Boolean { value: true };
+        let expected = "true";
+        let result = value.format_root();
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn test_formats_false_boolean_as_root() {
+        let value = Boolean { value: false };
+        let expected = "false";
+        let result = value.format_root();
+
+        assert_eq!(expected, result);
+    }
 }
