@@ -49,4 +49,22 @@ mod string_tests {
 
         assert_eq!(expected, result);
     }
+
+    #[test]
+    fn it_formats_string_as_child() {
+        let string = String { value: "foo" };
+        let expected = "\"foo\"";
+        let result = string.format_as_child(0);
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn it_formats_string_as_root() {
+        let string = String { value: "foo" };
+        let expected = "\"foo\"";
+        let result = string.format_root();
+
+        assert_eq!(expected, result);
+    }
 }
