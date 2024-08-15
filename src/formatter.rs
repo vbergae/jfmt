@@ -21,7 +21,7 @@ use crate::parser::parse;
 pub fn format(json: &str) -> String {
     match parse(json) {
         Ok(value) => value.format_as_root(),
-        Err(_) => "[Error] Input JSON is malformed".to_string(),
+        Err(error) => format!("[Error] {}", error),
     }
 }
 
@@ -113,8 +113,9 @@ mod json_formatter_tests {
     #[test]
     fn it_does_not_panics_when_json_is_bad_formatted() {
         let input = "[1, 2, 3";
+        let expected = "[Error]  --> 1:8\n  |\n1 | [1, 2, 3\n  |        ^---\n  |\n  = expected object or array";
         let result = format(input);
 
-        assert_eq!("[Error] Input JSON is malformed", result);
+        assert_eq!(expected, result);
     }
 }
