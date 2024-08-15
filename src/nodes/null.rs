@@ -22,7 +22,7 @@ pub struct Null {}
 
 impl<'a> Node<'a> for Null {
     fn format_as_child(&self, _tabs: usize) -> std::string::String {
-        format!("null")
+        "null".to_string()
     }
 
     fn format_as_root(&self) -> std::string::String {
