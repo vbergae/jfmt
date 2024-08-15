@@ -23,41 +23,19 @@ pub struct Number {
 }
 
 impl<'a> Node<'a> for Number {
-    fn format(&self) -> String {
+    fn format_as_child(&self, _tabs: usize) -> std::string::String {
         let value = self.value;
         format!("{value}")
     }
 
-    fn format_as_child(&self, _tabs: usize) -> std::string::String {
-        self.format()
-    }
-
     fn format_as_root(&self) -> std::string::String {
-        self.format()
+        self.format_as_child(0)
     }
 }
 
 #[cfg(test)]
 mod number_tests {
     use super::*;
-
-    #[test]
-    fn it_formats_positive_value() {
-        let number = Number { value: 2.0 };
-        let expected = "2";
-        let result = number.format();
-
-        assert_eq!(expected, result);
-    }
-
-    #[test]
-    fn it_formats_negative_value() {
-        let number = Number { value: -2.0 };
-        let expected = "-2";
-        let result = number.format();
-
-        assert_eq!(expected, result);
-    }
 
     #[test]
     fn it_formats_positive_value_as_child() {

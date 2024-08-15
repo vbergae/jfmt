@@ -43,10 +43,6 @@ impl Array<'_> {
 }
 
 impl<'a> Node<'a> for Array<'a> {
-    fn format(&self) -> String {
-        self.format_as_child(0)
-    }
-
     fn format_as_child(&self, tabs: usize) -> std::string::String {
         if self.is_empty() {
             return "[]".to_string();

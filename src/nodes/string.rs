@@ -23,32 +23,19 @@ pub struct String<'a> {
 }
 
 impl<'a> Node<'a> for String<'a> {
-    fn format(&self) -> std::string::String {
+    fn format_as_child(&self, _tabs: usize) -> std::string::String {
         let value = self.value;
         format!("\"{value}\"")
     }
 
-    fn format_as_child(&self, _tabs: usize) -> std::string::String {
-        self.format()
-    }
-
     fn format_as_root(&self) -> std::string::String {
-        self.format()
+        self.format_as_child(0)
     }
 }
 
 #[cfg(test)]
 mod string_tests {
     use super::*;
-
-    #[test]
-    fn it_formats_string() {
-        let string = String { value: "foo" };
-        let expected = "\"foo\"";
-        let result = string.format();
-
-        assert_eq!(expected, result);
-    }
 
     #[test]
     fn it_formats_string_as_child() {

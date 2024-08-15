@@ -23,41 +23,19 @@ pub struct Boolean {
 }
 
 impl<'a> Node<'a> for Boolean {
-    fn format(&self) -> String {
+    fn format_as_child(&self, _tabs: usize) -> std::string::String {
         let value = self.value;
         format!("{value}")
     }
 
-    fn format_as_child(&self, _tabs: usize) -> std::string::String {
-        self.format()
-    }
-
     fn format_as_root(&self) -> std::string::String {
-        self.format()
+        self.format_as_child(0)
     }
 }
 
 #[cfg(test)]
 mod boolean_tests {
     use super::*;
-
-    #[test]
-    fn test_formats_true_boolean() {
-        let value = Boolean { value: true };
-        let expected = "true";
-        let result = value.format();
-
-        assert_eq!(expected, result);
-    }
-
-    #[test]
-    fn test_formats_false_boolean() {
-        let value = Boolean { value: false };
-        let expected = "false";
-        let result = value.format();
-
-        assert_eq!(expected, result);
-    }
 
     #[test]
     fn test_formats_true_boolean_as_child() {

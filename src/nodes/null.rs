@@ -21,30 +21,18 @@ use crate::nodes::Node;
 pub struct Null {}
 
 impl<'a> Node<'a> for Null {
-    fn format(&self) -> String {
+    fn format_as_child(&self, _tabs: usize) -> std::string::String {
         format!("null")
     }
 
-    fn format_as_child(&self, _tabs: usize) -> std::string::String {
-        self.format()
-    }
-
     fn format_as_root(&self) -> std::string::String {
-        self.format()
+        self.format_as_child(0)
     }
 }
 
 #[cfg(test)]
 mod null_tests {
     use super::*;
-
-    #[test]
-    fn test_formats_null_without_indendation() {
-        let null = Null {};
-        let result = null.format();
-
-        assert_eq!("null", result);
-    }
 
     #[test]
     fn test_formats_null_as_child() {
