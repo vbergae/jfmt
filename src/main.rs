@@ -61,7 +61,7 @@ mod command_tests {
         let mut temp_file = File::create(temp_file_path).unwrap();
         writeln!(temp_file, "{contents}").unwrap();
 
-        let args = Command::parse_from(&["test", temp_file_path]);
+        let args = Command::parse_from(["test", temp_file_path]);
         let input = args.contents();
         assert_eq!(input, contents);
 
