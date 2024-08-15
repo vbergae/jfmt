@@ -24,8 +24,7 @@ pub struct Number {
 
 impl<'a> Node<'a> for Number {
     fn format_as_child(&self, _tabs: usize) -> std::string::String {
-        let value = self.value;
-        format!("{value}")
+        self.value.to_string()
     }
 
     fn format_as_root(&self) -> std::string::String {
