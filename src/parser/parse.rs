@@ -22,7 +22,7 @@ use pest::iterators::Pair;
 use pest::Parser;
 use pest_derive::Parser;
 
-pub fn parse(json: &str) -> Result<Box<dyn Node + '_>, Error<Rule>> {
+pub fn parse(json: &str) -> Result<Box<dyn Node + '_>, Box<Error<Rule>>> {
     let json = JSONParser::parse(Rule::json, json)?.next().unwrap();
 
     Ok(parse_value(json))
