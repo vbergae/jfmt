@@ -19,8 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use crate::parser::parse;
 
 pub fn format(json: &str) -> String {
-    let value = parse(json).expect("Invalid json");
-    value.format_as_root()
+    match parse(json) {
+        Ok(value) => value.format_as_root(),
+        Err(_) => "[Error] Input JSON is malformed".to_string(),
+    }
 }
 
 #[cfg(test)]
@@ -106,5 +108,13 @@ mod json_formatter_tests {
         let result = format(input);
 
         assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn it_does_not_panics_when_json_is_bad_formatted() {
+        let input = "[1, 2, 3";
+        let result = format(input);
+
+        assert_eq!("[Error] Input JSON is malformed", result);
     }
 }
