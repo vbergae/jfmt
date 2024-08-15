@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 use crate::nodes::node::TAB_SPACES;
 
 use super::Node;
+use colored::Colorize;
 
 pub struct Object<'a> {
     pub members: Vec<(&'a str, Box<dyn Node<'a> + 'a>)>,
@@ -34,10 +35,10 @@ impl Object<'_> {
             .iter()
             .map(|member| {
                 let indendation = " ".repeat(tabs * TAB_SPACES);
-                let attribute = member.0;
+                let attribute = format!("\"{}\"", member.0).bright_purple().bold();
                 let value = member.1.format_as_child(tabs);
 
-                format!("{indendation}\"{attribute}\": {value}")
+                format!("{indendation}{attribute}: {value}")
             })
             .reduce(|acc, member| format!("{acc},\n{member}"))
             .unwrap_or("".to_string())
@@ -87,7 +88,7 @@ mod object_tests {
         let object = Object {
             members: vec![("member", Box::new(String { value: "value" }))],
         };
-        let expected = "{\n  \"member\": \"value\"\n}";
+        let expected = "{\n  \u{1b}[1;95m\"member\"\u{1b}[0m: \"value\"\n}";
         let result = object.format_as_root();
 
         assert_eq!(expected, result);
@@ -105,7 +106,7 @@ mod object_tests {
                 ("child", Box::new(first_level_object)),
             ],
         };
-        let expected = "{\n  \"member\": \"value\",\n  \"number\": 2,\n  \"child\": {\n    \"member\": \"value\"\n  }\n}";
+        let expected = "{\n  \u{1b}[1;95m\"member\"\u{1b}[0m: \"value\",\n  \u{1b}[1;95m\"number\"\u{1b}[0m: 2,\n  \u{1b}[1;95m\"child\"\u{1b}[0m: {\n    \u{1b}[1;95m\"member\"\u{1b}[0m: \"value\"\n  }\n}";
         let result = object.format_as_root();
 
         assert_eq!(expected, result);

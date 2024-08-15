@@ -95,7 +95,7 @@ mod json_formatter_tests {
     #[test]
     fn it_formats_an_object() {
         let input = "{\"name\": \"Nico\",\"foo\": \"bar\"}";
-        let expected = "{\n  \"name\": \"Nico\",\n  \"foo\": \"bar\"\n}";
+        let expected = "{\n  \u{1b}[1;95m\"name\"\u{1b}[0m: \"Nico\",\n  \u{1b}[1;95m\"foo\"\u{1b}[0m: \"bar\"\n}";
         let result = format(input);
 
         assert_eq!(expected, result);
