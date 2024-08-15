@@ -35,7 +35,7 @@ mod json_formatter_tests {
         let expected = "{}";
         let result = format(input);
 
-        assert_eq!(result, expected);
+        assert_eq!(expected, result);
     }
 
     #[test]
@@ -44,7 +44,7 @@ mod json_formatter_tests {
         let expected = "[]";
         let result = format(input);
 
-        assert_eq!(result, expected);
+        assert_eq!(expected, result);
     }
 
     #[test]
@@ -53,7 +53,7 @@ mod json_formatter_tests {
         let expected = "[\n  true\n]";
         let result = format(input);
 
-        assert_eq!(result, expected);
+        assert_eq!(expected, result);
     }
 
     #[test]
@@ -62,7 +62,7 @@ mod json_formatter_tests {
         let expected = "[\n  true,\n  false\n]";
         let result = format(input);
 
-        assert_eq!(result, expected);
+        assert_eq!(expected, result);
     }
 
     #[test]
@@ -71,7 +71,7 @@ mod json_formatter_tests {
         let expected = "[\n  false,\n  null,\n  null\n]";
         let result = format(input);
 
-        assert_eq!(result, expected);
+        assert_eq!(expected, result);
     }
 
     #[test]
@@ -80,7 +80,7 @@ mod json_formatter_tests {
         let expected = "[\n  1,\n  2,\n  -1,\n  5000\n]";
         let result = format(input);
 
-        assert_eq!(result, expected);
+        assert_eq!(expected, result);
     }
 
     #[test]
@@ -89,7 +89,7 @@ mod json_formatter_tests {
         let expected = "[\n  \"hello\",\n  \"world\"\n]";
         let result = format(input);
 
-        assert_eq!(result, expected);
+        assert_eq!(expected, result);
     }
 
     #[test]
@@ -98,7 +98,7 @@ mod json_formatter_tests {
         let expected = "{\n  \"name\": \"Nico\",\n  \"foo\": \"bar\"\n}";
         let result = format(input);
 
-        assert_eq!(result, expected);
+        assert_eq!(expected, result);
     }
 
     #[test]
@@ -107,7 +107,7 @@ mod json_formatter_tests {
         let expected = "[\n  1,\n  [\n    3\n  ]\n]";
         let result = format(input);
 
-        assert_eq!(result, expected);
+        assert_eq!(expected, result);
     }
 
     #[test]
