@@ -94,9 +94,11 @@ mod json_formatter_tests {
 
     #[test]
     fn it_formats_an_object() {
+        colored::control::set_override(true);
         let input = "{\"name\": \"Nico\",\"foo\": \"bar\"}";
         let expected = "{\n  \u{1b}[1;95m\"name\"\u{1b}[0m: \"Nico\",\n  \u{1b}[1;95m\"foo\"\u{1b}[0m: \"bar\"\n}";
         let result = format(input);
+        colored::control::unset_override();
 
         assert_eq!(expected, result);
     }
