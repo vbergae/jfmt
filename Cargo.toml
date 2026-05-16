@@ -12,7 +12,7 @@ keywords = ["cli", "json", "formatter"]
 categories = ["command-line-utilities"]
 
 [dependencies]
-clap = { version = "4.5.20", features = ["derive"] }
+clap = { version = "4.5.60", features = ["derive"] }
 clap-stdin = "0.8.1"
 colored = "3.1.1"
 pest = "2.8.6"
