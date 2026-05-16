@@ -85,17 +85,20 @@ mod object_tests {
 
     #[test]
     fn it_formats_an_object() {
+        colored::control::set_override(true);
         let object = Object {
             members: vec![("member", Box::new(String { value: "value" }))],
         };
         let expected = "{\n  \u{1b}[1;95m\"member\"\u{1b}[0m: \"value\"\n}";
         let result = object.format_as_root();
+        colored::control::unset_override();
 
         assert_eq!(expected, result);
     }
 
     #[test]
     fn it_formats_a_multidimensional_object() {
+        colored::control::set_override(true);
         let first_level_object = Object {
             members: vec![("member", Box::new(String { value: "value" }))],
         };
@@ -108,6 +111,7 @@ mod object_tests {
         };
         let expected = "{\n  \u{1b}[1;95m\"member\"\u{1b}[0m: \"value\",\n  \u{1b}[1;95m\"number\"\u{1b}[0m: 2,\n  \u{1b}[1;95m\"child\"\u{1b}[0m: {\n    \u{1b}[1;95m\"member\"\u{1b}[0m: \"value\"\n  }\n}";
         let result = object.format_as_root();
+        colored::control::unset_override();
 
         assert_eq!(expected, result);
     }
