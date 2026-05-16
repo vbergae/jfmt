@@ -118,4 +118,46 @@ mod json_formatter_tests {
 
         assert_eq!(expected, result);
     }
+
+    #[test]
+    fn it_rejects_unescaped_newline_in_string() {
+        let input = "\"hello\nworld\"";
+        let result = format(input);
+
+        assert!(result.starts_with("[Error]"));
+    }
+
+    #[test]
+    fn it_rejects_unescaped_tab_in_string() {
+        let input = "\"hello\tworld\"";
+        let result = format(input);
+
+        assert!(result.starts_with("[Error]"));
+    }
+
+    #[test]
+    fn it_rejects_unescaped_carriage_return_in_string() {
+        let input = "\"hello\rworld\"";
+        let result = format(input);
+
+        assert!(result.starts_with("[Error]"));
+    }
+
+    #[test]
+    fn it_accepts_escaped_control_characters_in_string() {
+        let input = "\"hello\\nworld\"";
+        let expected = "\"hello\\nworld\"";
+        let result = format(input);
+
+        assert_eq!(expected, result);
+    }
+
+    #[test]
+    fn it_accepts_unicode_escape_in_string() {
+        let input = "\"caf\\u00e9\"";
+        let expected = "\"caf\\u00e9\"";
+        let result = format(input);
+
+        assert_eq!(expected, result);
+    }
 }
