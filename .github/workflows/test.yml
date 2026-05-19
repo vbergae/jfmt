@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
     - name: Check formatting
       run: cargo fmt --check
   
@@ -40,7 +40,7 @@ jobs:
             rust: stable
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@v6
     - name: Check linting
       run: cargo clippy --all-targets --all-features -- -D warnings
 
@@ -64,7 +64,7 @@ jobs:
             rust: stable
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Build
       run: cargo build --verbose
     - name: Run tests
