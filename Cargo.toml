@@ -16,4 +16,4 @@ clap = { version = "4.5.60", features = ["derive"] }
 clap-stdin = "0.8.1"
 colored = "3.1.1"
 pest = "2.8.6"
-pest_derive = "2.7.14"
+pest_derive = "2.8.6"
